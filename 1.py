@@ -23,4 +23,5 @@ print(list(zip(words,location)))
 print(dict(list(zip(words,location))))
 print(list(zip([1,2],[3,4],[4,5])))
 print(list(zip([1,2],[3,4],[4,5,5])))
-zip
+a,b=1,2
+print(a),print(b)
