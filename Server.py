@@ -23,12 +23,15 @@ serversocket.listen(5)
  
 while True:
     # 建立客户端连接
-    clientsocket,addr = serversocket.accept()     
+    clientsocket,addr = serversocket.accept()  
+    #发送数据
     print("连接地址: %s" % str(addr))
     msg='欢迎访问！'+ "\r\n"
     clientsocket.send(msg.encode('utf-8'))
+    #接受数据
     get = clientsocket.recv(1024)
     print(get.decode('utf-8'))
+
     time.sleep(3)
 
     #clientsocket.close()
