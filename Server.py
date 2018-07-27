@@ -13,7 +13,7 @@ serversocket = socket.socket(
 # 获取本地主机名
 host = socket.gethostname()
  
-port = 9998
+port = 9996
  
 # 绑定端口
 serversocket.bind((host, port))
@@ -24,7 +24,7 @@ serversocket.listen(5)
 while True:
     # 建立客户端连接
     print("Server开始连接Client")
-    clientsocket,addr = serversocket.accept()  
+    clientsocket,addr = serversocket.accept() #只连接一次所以只执行一次？
     #发送数据
     print("连接地址: %s" % str(addr))
     print("Server开始发送数据")
