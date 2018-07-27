@@ -1,7 +1,22 @@
 »¶Ó­·ÃÎÊ£¡
 »¶Ó­·ÃÎÊ£¡
+s.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 10000, 3000))»¶Ó­·ÃÎÊ£¡
+»¶Ó­·ÃÎÊ£¡»¶Ó­·ÃÎÊ£¡
 »¶Ó­·ÃÎÊ£¡
 »¶Ó­·ÃÎÊ£¡
 »¶Ó­·ÃÎÊ£¡
-»¶Ó­·ÃÎÊ£¡
-»¶Ó­·ÃÎÊ£¡
+HTTP/1.1 400 Bad Request
+Server: nginx
+Date: Fri, 27 Jul 2018 03:34:08 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: close
+X-Via-CDN: f=edge,s=ctc.xiamen.ha2ts4.41.nb.sinaedge.com,c=218.104.195.194;
+
+<html>
+<head><title>400 Bad Request</title></head>
+<body bgcolor="white">
+<center><h1>400 Bad Request</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
