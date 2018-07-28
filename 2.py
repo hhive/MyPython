@@ -65,3 +65,6 @@ while len(nums)> 0:
 
 print(even)
 print(odd)
+#集合
+basket = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+print(basket)
