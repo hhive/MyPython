@@ -30,6 +30,7 @@ class Client:
                 self.isOk = True
             except socket.error:
                 print('\n网络错误，开始重连')
+                time.sleep(3)
         return sock
 
     def send_msg(self):
@@ -37,7 +38,7 @@ class Client:
             if self.isOk:
                 print("请输入你想发送的数据，回车结束：")
                 # hello = 'Hello' + "\r\n"
-                hello = input('>>\n')
+                hello = input('>>')
                 hello = hello + "\r\n"
                 self.s.send(hello.encode())
             time.sleep(1)
@@ -49,14 +50,14 @@ class Client:
                 # 接收小于 1024 字节的数据
                 # 读取接收到的数据并写入文件
                 total_data = []
-                print("Client开始读入数据")
+                print("\nClient读入数据准备")
                 while True:
                     data = self.s.recv(1024).decode()
                     if End in data:
                         total_data.append(data[:data.find(End)])
                         break
                     total_data.append(data)
-                print("Client开始写入文件")
+                print("\nClient开始写入文件")
                 data = ''.join(total_data)  # join() 方法用于将序列中的元素以指定的字符连接生成一个新的字符串。
                 with open('Client.txt', 'a') as f:
                     f.write(data)
@@ -67,14 +68,13 @@ class Client:
             except IOError:
                 print('\n写入文件错误')
 
-            except:
-                print('\n其他错误发生')
+            # except:
+            #     print('\n其他错误发生')
             time.sleep(1)
 
-    def player(self, name):
+    def mythread(self, name):
         if name == 'send':
             self.send_msg()
-            print("\n")
         else:
             if name == 'recv':
                 self.receiver_msg()
@@ -84,23 +84,17 @@ class Client:
 
 list = ['recv', 'send']
 sockets = Client(socket.gethostname(), 9998)
-# sockets.send_msg()
-# sockets.recever_msg()
-# t1 = threading.Thread(target=sockets.send_msg())
-# t2 = threading.Thread(target=sockets.recever_msg())
-# t2.start()
-# t1.join()
 files = range(len(list))
 threads = []
 
 # 创建线程
 for i in files:
-    t = threading.Thread(target=sockets.player, args=(list[i],))
+    t = threading.Thread(target=sockets.mythread, args=(list[i],))
     threads.append(t)
 
 if __name__ == '__main__':
     # 启动线程
     for i in files:
         threads[i].start()
-    for i in files:
-        threads[i].join()
+    # for i in files:
+    #     threads[i].join()
