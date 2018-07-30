@@ -27,14 +27,15 @@ while True:
     clientsocket,addr = serversocket.accept() #只连接一次所以只执行一次？
     #发送数据
     print("连接地址: %s" % str(addr))
-    print("Server开始发送数据")
-    msg='欢迎访问！'+ "\r\n"
-    clientsocket.send(msg.encode('utf-8'))
-    #接受数据
-    print("Server开始接收数据")
-    get = clientsocket.recv(1024)
-    print(get.decode('utf-8'))
+    while True:
+        print("Server开始发送数据")
+        msg='欢迎访问！'+ "\r\n"
+        clientsocket.send(msg.encode('utf-8'))
+        #接受数据
+        print("Server开始接收数据")
+        get = clientsocket.recv(1024)
+        print(get.decode('utf-8'))
 
-    time.sleep(3)
+        time.sleep(3)
 
-    #clientsocket.close()
+    clientsocket.close()
