@@ -15,6 +15,7 @@ class Client:
         self.host = host
         self.port = port
         self.s = self.do_connect(self.host, self.port)
+
         # 心跳检测
         self.s.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 10000, 3000))
 
@@ -22,7 +23,7 @@ class Client:
     def do_connect(self, host, port):
         self.isOk = False
         # 创建 socket 对象
-        sock = self.s
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         while not self.isOk:
             try:
                 # 连接服务，指定主机和端口
@@ -96,5 +97,3 @@ if __name__ == '__main__':
     # 启动线程
     for i in files:
         threads[i].start()
-    # for i in files:
-    #     threads[i].join()
