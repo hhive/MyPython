@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 # 文件名：client.py
 
-# 导入 socket、sys 模块
+# 导入 socket模块
 import socket
-import sys
 import time
 import threading
 
@@ -16,6 +15,7 @@ class Client:
         self.host = host
         self.port = port
         self.s = self.do_connect(self.host, self.port)
+        # 心跳检测
         self.s.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 10000, 3000))
 
     # 自动重连
@@ -42,14 +42,13 @@ class Client:
                 self.s.send(hello.encode())
             time.sleep(1)
 
-    def recever_msg(self):
-        End = '\r\n'
+    def receiver_msg(self):
+        End = r'\r\n'
         while True:
             try:
                 # 接收小于 1024 字节的数据
                 # 读取接收到的数据并写入文件
                 total_data = []
-                data = ''
                 print("Client开始读入数据")
                 while True:
                     data = self.s.recv(1024).decode()
@@ -78,7 +77,7 @@ class Client:
             print("\n")
         else:
             if name == 'recv':
-                self.recever_msg()
+                self.receiver_msg()
             else:
                 print('error: The format is not recognized!')
 
