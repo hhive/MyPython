@@ -1,0 +1,39 @@
+import requests
+from bs4 import BeautifulSoup
+import pymysql
+import time
+
+
+def get_page( url ):
+    # response 用于获取网页
+    response = requests.get(url).text
+    # soup 用于对获取的网页进行处理
+    soup = BeautifulSoup(response, 'lxml')
+    return soup
+
+
+def get_recruit(url):
+    soup = get_page(url)
+    link_td = soup.find_all('td', class_="list-two")
+    #print(link_td)
+    # print(link_td[0])
+    links = ['https://www.xiaoyuanzhao.com'+td.a.get('href') for td in link_td]
+    print(links[0])
+    return links
+
+
+url = "https://www.xiaoyuanzhao.com/wangshen?c=180&i=1&j=opj_aepdep2mgrcj&o=1"
+# soup = get_page(url)
+# #print(soup)
+# reponse = requests.get(url).text
+# soup = BeautifulSoup(reponse,'lxml')
+# print(reponse)
+
+
+links = get_recruit(url)
+soup = get_page(links[1])
+# print(soup)
+# print(soup.find('div', class_="detial-l").text)
+contents = soup.find_all('p')
+for content in contents:
+    print(content.text)

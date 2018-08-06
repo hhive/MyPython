@@ -16,3 +16,5 @@ for i in range(0, rows):
     str = "-";
     seq = ("a", "b", "c");  # 字符串序列
     print(str.join(seq))
+
+print("1111"+"22222")
