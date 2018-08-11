@@ -1,0 +1,171 @@
+Module="X209_KB-FCT_Manual"			--Module Name
+Version="20160310.KBFCT1"		--Version
+
+local MCU_Flashing_Verification_Test_Sub = {
+	{name="MCU Flashing Over JTAG",lower="",upper="",unit="",entry=MCU_Firmware_Download,parameter=nil,sub=nil,skip=0},
+}; 
+local MCU_Flashing_Verification_Test_Item={name="MCU Flashing Verification",entry=nil,parameter=nil,sub=MCU_Flashing_Verification_Test_Sub};
+
+local POWER_SUB = {
+	{name="Power On",lower=nil,upper=nil,unit=nil,entry=PowerOn,parameter=nil},
+};
+local Power_Item = {name="[PWR]",entry=nil,parameter=nil,sub=POWER_SUB};
+
+local DC_Test_Sub = {
+	{name="change to 2 wire",lower=nil,upper=nil,unit=nil,entry=setTo2WireTest,parameter=nil,sub=nil,visible=0,skip=nil,remark=nil,skip=0},
+	{name="Recycle Power",lower=nil,upper=nil,unit=nil,entry=PowerRecycle,parameter=nil,sub=nil,visible=1,skip=nil,remark=nil,skip=0},
+    {name="Delay 2s",lower=nil,upper=nil,unit=nil,entry=Delay,parameter=2000,sub=nil,visible=1,skip=nil,remark=nil,skip=0},
+	{name="Consumption Current",lower=0.271,upper=0.615,unit="mA",entry=GetOutCurrent,parameter=nil,sub=nil},
+	{name="change to 4 wire",lower=nil,upper=nil,unit=nil,entry=setTo4WireTest,parameter=nil,sub=nil,visible=0,skip=nil,remark=nil,skip=0},
+	{name="TP93 Voltage",lower=3.2*0.965,upper=3.2*1.035,unit="V",entry=GetTP93Voltage,parameter=nil,sub=nil},
+	{name="TP94 Voltage",lower=1.8*0.965,upper=1.8*1.035,unit="V",entry=GetTP94Voltage,parameter=nil,sub=nil},
+};
+local DC_Test_Item={name="DC - DC Converter Characterization",entry=nil,parameter=nil,sub=DC_Test_Sub};
+
+local AID_Firmware_1_Sub = {
+	--{name="Connect T118 1",lower=nil,upper=nil,unit=nil,entry=ConnectT118,parameter=nil},
+   	{name="Check HID Dongle 1",lower="",upper="",unit=nil,entry=ConnectT118AndCheckDongle,parameter=nil,visible=1},
+   	{name="Check HID Dongle retry count",lower=0,upper=math.huge,unit=nil,entry=ConnectT118RetryCount,parameter=nil,visible=1},  	
+    {name="FW Download Over AID",lower="",upper="",unit=nil,entry=AID_Firmware_PreDownload1,parameter=nil,sub=nil,visible=1,skip=0},
+    {name="Delay 3 seconds",lower=nil,upper=nil,unit=nil,entry=Delay,parameter=3000,sub=nil,visible=1,skip=SkipDelay,remark=nil,},
+    {name="Check Firmware after AID",lower="0849",upper="0849",unit="",entry=GetFirmware,parameter=nil,sub=nil,pdca=0},
+    {name="Check Firmware after AID retry count",lower=0,upper=math.huge,unit="",entry=GetFirmwareRetryCount,parameter=nil,sub=nil,pdca=0},
+};
+local AID_Firmware_1_Item={name="AID_Firmware_1",entry=nil,parameter=nil,sub=AID_Firmware_1_Sub};
+
+local SN_Blob_Test_Sub = {
+    {name="Scanned SN",lower="",upper="",unit=nil,entry=GetScannedSN,parameter=nil,sub=nil,visible=1},
+	{name="Check SN State",lower="",upper="",unit=nil,entry=CheckDUTSNState,parameter=nil,sub=nil,visible=1,stopfail=true},
+	
+	
+	--{name="Generate SN Blob",lower="",upper="",unit=nil,entry=GenerateSNBlob,parameter=nil,sub=nil,visible=1},
+	--{name="Write SN",lower="",upper="",unit=nil,entry=WriteSN,parameter=nil,sub=nil},
+	--{name="Check SN",lower="",upper="",unit=nil,entry=CheckSN,parameter=nil,sub=nil},
+};
+local SN_Blob_Item={name="SN Blob",entry=nil,parameter=nil,sub=SN_Blob_Test_Sub};
+
+local Trace_Resistance_Item_Sub = {
+	{name="calc trace resistances",lower=nil,upper=nil,unit=nil,entry=__CalcTraceRes,parameter=nil,sub=nil,visible=0},
+	{name="Set Voltage",lower=4.0,upper=4.0,unit="V",entry=__GetTR,parameter="vset",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Meas Voltage",lower=3.98,upper=4.02,unit="V",entry=__GetTR,parameter="vin",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Voltage1",lower=3.92,upper=4.091,unit="V",entry=__GetTR,parameter="v1",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Current1",lower=0.0128,upper=0.0155,unit="A",entry=__GetTR,parameter="i1",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Voltage2",lower=3.92,upper=4.090,unit="V",entry=__GetTR,parameter="v2",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Current2",lower=0.0325,upper=0.0355,unit="A",entry=__GetTR,parameter="i2",sub=nil,visible=1,skip=nil,remark=nil},
+	{name="Round Trip Resistance I2",lower=-10,upper=10,unit=nil,entry=__GetTR,parameter="r2",sub=nil,visible=1,skip=nil,remark=nil},	
+	{name="Round Trip Resistance I1 I2",lower=-0.250,upper=0.750,unit=nil,entry=__GetTR,parameter="r12",sub=nil,visible=1,skip=nil,remark=nil},	 
+	{name="InternalResistance",lower=250,upper=325,unit=nil,entry=__GetTR,parameter="rin",sub=nil,visible=1,skip=nil,remark=nil},
+ 
+};
+local Trace_Resistance_Item={name="Trace_Resistance_Check",entry=nil,parameter=nil,sub=Trace_Resistance_Item_Sub};
+
+local Mozart_Verify_Test_Sub = {
+	{name="Mozart Address Verification",lower="0x10",upper="0x10",unit=nil,entry=GetMozartAddress,parameter=nil,sub=nil},
+};
+local Mozart_Verify_Item={name="Mozart Verify",entry=nil,parameter=nil,sub=Mozart_Verify_Test_Sub};
+
+local AID_Firmware_2_Sub_Item = {
+    {name="FW Download Over AID 2",lower="",upper="",unit=nil,entry=AID_Firmware_Download,parameter=nil,sub=nil,visible=1},
+    {name="Delay 5 second",lower=nil,upper=nil,unit=nil,entry=Delay,parameter=5000,sub=nil,visible=1,skip=nil,remark=nil},
+    {name="Check Firmware 2",lower="0727",upper="0727",unit="",entry=GetFirmware,parameter=0,sub=nil,pdca=1},
+};
+local AID_Firmware_2_Item={name="AID_Firmware_2",entry=nil,parameter=nil,sub=AID_Firmware_2_Sub_Item};
+
+local Hi5_Verification_Test_Sub = {
+	{name="Hi5 Verification",lower=nil,upper=nil,unit="",entry=Hi5Test,parameter=nil,sub=nil,skip=0},
+};
+local Hi5_Verification_Test_Item={name="Hi5 Verification",entry=nil,parameter=nil,sub=Hi5_Verification_Test_Sub};
+
+
+local Hall_Effect_Sensor_Test_Sub = {
+		{tid="H1",name="Right Hall effect Sensor(<0.25mt)",lower=0,upper=0,unit="",entry=HallEffectSensorTesting,parameter={Position=1,dGauss=0.24,dOffsetGauss=0.2},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Right Hall effect Sensor(13mt)",lower=0,upper=2,unit="",entry=HallEffectSensorTesting,parameter={Position=1,dGauss=13,dOffsetGauss=0.5},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Right Hall effect Sensor(16.5mt)",lower=2,upper=2,unit="",entry=HallEffectSensorTesting,parameter={Position=1,dGauss=16.5,dOffsetGauss=1},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Right Hall effect Sensor(25mt)",lower=2,upper=2,unit="",entry=HallEffectSensorTesting,parameter={Position=1,dGauss=25,dOffsetGauss=1},sub=nil,skip=0,cof=0},
+
+		{tid="H1",name="Left Hall effect Sensor(<0.25mt)",lower=0,upper=0,unit="",entry=HallEffectSensorTesting,parameter={Position=0,dGauss=0.24,dOffsetGauss=0.2},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Left Hall effect Sensor(8mt)",lower=0,upper=1,unit="",entry=HallEffectSensorTesting,parameter={Position=0,dGauss=8,dOffsetGauss=0.5},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Left Hall effect Sensor(10.5mt)",lower=1,upper=1,unit="",entry=HallEffectSensorTesting,parameter={Position=0,dGauss=10.5,dOffsetGauss=1},sub=nil,skip=0,cof=0},
+		{tid="H1",name="Left Hall effect Sensor(16.5mt)",lower=1,upper=1,unit="",entry=HallEffectSensorTesting,parameter={Position=0,dGauss=16.5,dOffsetGauss=1},sub=nil,skip=0,cof=0},
+
+};
+local Hall_Effect_Sensor_Test_Item={name="Hall_Effect_Sensor",entry=nil,parameter=nil,sub=Hall_Effect_Sensor_Test_Sub};
+
+local KeyPress_Test_Sub = {
+	{name="Key_Wave",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=53,sub=nil,skip=0,cof=0,Location="TILDE"},
+	{name="Key_1",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=30,sub=nil,skip=0,cof=0,Location="NUM1"},
+	{name="Key_2",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=31,sub=nil,skip=0,cof=0,Location="NUM2"},
+	{name="Key_3",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=32,sub=nil,skip=0,cof=0,Location="NUM3"},
+	{name="Key_4",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=33,sub=nil,skip=0,cof=0,Location="NUM4"},
+	{name="Key_5",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=34,sub=nil,skip=0,cof=0,Location="NUM5"},
+	{name="Key_6",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=35,sub=nil,skip=0,cof=0,Location="NUM6"},
+	{name="Key_7",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=36,sub=nil,skip=0,cof=0,Location="NUM7"},
+	{name="Key_8",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=37,sub=nil,skip=0,cof=0,Location="NUM8"},
+	{name="Key_9",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=38,sub=nil,skip=0,cof=0,Location="NUM9"},
+	{name="Key_0",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=39,sub=nil,skip=0,cof=0,Location="NUM0"},
+	{name="Key_Minus",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=45,sub=nil,skip=0,cof=0,Location="MINUS"},
+	{name="Key_Equal",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=46,sub=nil,skip=0,cof=0,Location="EQUAL"},
+	{name="Key_Del",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=42,sub=nil,skip=0,cof=0,Location="DELETE"},
+	{name="Key_Tab",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=43,sub=nil,skip=0,cof=0,Location="TAB"},
+	{name="Key_Q",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=20,sub=nil,skip=0,cof=0,Location="Q"},
+	{name="Key_W",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=26,sub=nil,skip=0,cof=0,Location="W"},
+	{name="Key_E",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=8,sub=nil,skip=0,cof=0,Location="E"},
+	{name="Key_R",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=21,sub=nil,skip=0,cof=0,Location="R"},
+	{name="Key_T",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=23,sub=nil,skip=0,cof=0,Location="T"},
+	{name="Key_Y",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=28,sub=nil,skip=0,cof=0,Location="Y"},
+	{name="Key_U",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=24,sub=nil,skip=0,cof=0,Location="U"},
+	{name="Key_I",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=12,sub=nil,skip=0,cof=0,Location="I"},
+	{name="Key_O",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=18,sub=nil,skip=0,cof=0,Location="O"},
+	{name="Key_P",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=19,sub=nil,skip=0,cof=0,Location="P"},
+	{name="Key_L_Bracket",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=47,sub=nil,skip=0,cof=0,Location="LEFTBRACKET"},
+	{name="Key_R_Bracket",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=48,sub=nil,skip=0,cof=0,Location="RIGHTBRACKET"},
+	{name="Key_BK_slash",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=49,sub=nil,skip=0,cof=0,Location="BACKSLASH"},
+	{name="Key_Caps",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=57,sub=nil,skip=0,cof=0,Location="CAPSLOCK"},
+	{name="Key_A",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=4,sub=nil,skip=0,cof=0,Location="A"},
+	{name="Key_S",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=22,sub=nil,skip=0,cof=0,Location="S"},
+	{name="Key_D",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=7,sub=nil,skip=0,cof=0,Location="D"},
+	{name="Key_F",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=9,sub=nil,skip=0,cof=0,Location="F"},
+	{name="Key_G",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=10,sub=nil,skip=0,cof=0,Location="G"},
+	{name="Key_H",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=11,sub=nil,skip=0,cof=0,Location="H"},
+	{name="Key_J",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=13,sub=nil,skip=0,cof=0,Location="J"},
+	{name="Key_K",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=14,sub=nil,skip=0,cof=0,Location="K"},
+	{name="Key_L",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=15,sub=nil,skip=0,cof=0,Location="L"},
+	{name="Key_Semicolon",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=51,sub=nil,skip=0,cof=0,Location="SEMICOLON"},
+	{name="Key_Quota",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=52,sub=nil,skip=0,cof=0,Location="QUOTE"},
+	{name="Key_Return",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=40,sub=nil,skip=0,cof=0,Location="RETURN"},
+	{name="Key_L_Shift",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=225,sub=nil,skip=0,cof=0,Location="LEFTSHIFT"},
+	{name="Key_Z",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=29,sub=nil,skip=0,cof=0,Location="Z"},
+	{name="Key_X",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=27,sub=nil,skip=0,cof=0,Location="X"},
+	{name="Key_C",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=6,sub=nil,skip=0,cof=0,Location="C"},
+	{name="Key_V",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=25,sub=nil,skip=0,cof=0,Location="V"},
+	{name="Key_B",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=5,sub=nil,skip=0,cof=0,Location="B"},
+	{name="Key_N",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=17,sub=nil,skip=0,cof=0,Location="N"},
+	{name="Key_M",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=16,sub=nil,skip=0,cof=0,Location="M"},
+	{name="Key_Comma",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=54,sub=nil,skip=0,cof=0,Location="COMMA"},
+	{name="Key_Point",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=55,sub=nil,skip=0,cof=0,Location="PERIOD"},
+	{name="Key_FW_Slash",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=56,sub=nil,skip=0,cof=0,Location="QUESTION"},
+	{name="Key_R_Shift",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=229,sub=nil,skip=0,cof=0,Location="RIGHTSHIFT"},
+	{name="Key_Globe",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=3,sub=nil,skip=0,cof=0,Location="FN"},
+	{name="Key_L_Ctrl",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=224,sub=nil,skip=0,cof=0,Location="LEFTCONTROL"},
+	{name="Key_L_Alt",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=226,sub=nil,skip=0,cof=0,Location="LEFTOPTION"},
+	{name="Key_L_Command",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=227,sub=nil,skip=0,cof=0,Location="LEFTCOMMAND"},
+	{name="Key_Space",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=44,sub=nil,skip=0,cof=0,Location="SPACE"},
+	{name="Key_R_Command",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=231,sub=nil,skip=0,cof=0,Location="RIGHTCOMMAND"},
+	{name="Key_R_ALt",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=230,sub=nil,skip=0,cof=0,Location="RIGHTOPTION"},
+	{name="Key_L_Arrow",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=80,sub=nil,skip=0,cof=0,Location="LEFT"},
+	{name="Key_U_Arrow",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=82,sub=nil,skip=0,cof=0,Location="UP"},
+	{name="Key_D_Arrow",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=81,sub=nil,skip=0,cof=0,Location="DOWN"},
+	{name="Key_R_Arrow",lower=1,upper=5,unit="",entry=KeyPressTimes,parameter=79,sub=nil,skip=0,cof=0,Location="RIGHT"},
+}; 
+local Main_Test_KeyPressTestItems={name="Key Press test",lower=true,upper=true,unit="",entry=KeyPressTest,parameter=30000,sub=KeyPress_Test_Sub,skip=0,cof=0};
+
+items = {
+	--Power_Item,
+	AID_Firmware_1_Item,
+	SN_Blob_Item,
+	DC_Test_Item,
+	Trace_Resistance_Item,
+	Mozart_Verify_Item,
+	Hall_Effect_Sensor_Test_Item,
+	Main_Test_KeyPressTestItems,
+};
