@@ -31,9 +31,9 @@ url = "https://www.xiaoyuanzhao.com/wangshen?c=180&i=1&j=opj_aepdep2mgrcj&o=1"
 
 
 links = get_recruit(url)
-soup = get_page(links[1])
+soup = get_page(links[2])
 # print(soup)
 # print(soup.find('div', class_="detial-l").text)
-contents = soup.find_all('p')
-for content in contents:
+contents = soup.find_all('span')
+for content in contents[24:-10]:
     print(content.text)

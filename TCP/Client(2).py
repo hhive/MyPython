@@ -5,6 +5,7 @@
 import socket
 import time
 import threading
+import logging
 
 
 class Client:
@@ -59,11 +60,13 @@ class Client:
                         break
                     total_data.append(data)
                 print("\nClient开始写入文件")
-                data = ''.join(total_data)  # join() 方法用于将序列中的元素以指定的字符连接生成一个新的字符串。
+                # join() 方法用于将序列中的元素以指定的字符连接生成一个新的字符串。
+                data = ''.join(total_data)
                 with open('Client.txt', 'a') as f:
                     f.write(data)
             except socket.error:
                 # 自动重连
+                print("socket.error")
                 self.s = self.do_connect(self.host, self.port)
 
             except IOError:
